@@ -8,7 +8,7 @@ A Event-based system, highly inspired by [NodeJS's EventEmitter](https://nodejs.
 * Emit a message on a specific topic to be broadcasted to all listeners.
 * Use callbacks with `EventEmitter`.
 * Use streams with `EventStreamEmitter`.
-* Can be extented to create custom event emitters objects.
+* Can be extented to create custom event emitter objects.
 
 ## Getting started
 
@@ -44,17 +44,24 @@ final subscription = events.on('message', ... ));
 subscription.cancel();
 ```
 
-Remove listeners, targeting by **type**, **topic** and **callback**.
+Remove listeners, by targeting a **type**, **topic** and **callback**.
 ```dart
 // Remove all listeners
 events.off();
+
 // Remove listeners of type `String`
 events.off<String>();
+
 // Remove listeners on topic `message`
 events.off(topic: 'message');
+
 // Combine methods above
 events.off<String>(topic: 'message');
 ```
+
+## GitHub
+
+The package code is available on Github: [Dart - EventEmitter](https://github.com/DrafaKiller/EventEmitter-dart)
 
 ## Example
 
@@ -83,7 +90,3 @@ person.jump(0.5);
 // John ate apple
 // John jumped 0.5 meters
 ```
-
-## GitHub
-
-The package code is available on Github: [Dart - EventEmitter](https://github.com/DrafaKiller/EventEmitter-dart)
