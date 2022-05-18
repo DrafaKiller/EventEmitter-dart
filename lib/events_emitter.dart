@@ -48,25 +48,24 @@ class EventEmitter {
   /// EventEmitter events = EventEmitter();
   /// events.on('message', (String data) => print('String: $data'));
   /// ```
-  EventListener on<Message> (String topic, void Function(Message data) callback) {
-    final stream = _eventStreamEmitter.on<Message>(topic);
-    final subscription = stream.listen(callback);
-    final listener = EventListener(topic, Message, callback, stream, subscription);
-    subscription.onDone(() => listeners.remove(listener));
+  EventListener on<MessageType> (String topic, void Function(MessageType data) callback) {
+    final stream = _eventStreamEmitter.on<MessageType>(topic);
+    final listener = EventListener<MessageType>(topic, callback, stream);
+    listener.subscription.onDone(() => listeners.remove(listener));
     listeners.add(listener);
     return listener;
   }
 
   /// Same as [on] but with a [callback] is only called once.
-  void once<Message> (String topic, void Function(Message data) callback) => _eventStreamEmitter.once<Message>(topic).then(callback);
+  void once<MessageType> (String topic, void Function(MessageType data) callback) => _eventStreamEmitter.once<MessageType>(topic).then(callback);
 
   /// Remove an attached listener, by [type], [topic] and [callback]. This can also be achieved by using the returned [StreamSubscription].
-  void off<Message> ({ String? topic, void Function(Message data)? callback }) {
+  void off<MessageType> ({ String? topic, void Function(MessageType data)? callback }) {
     listeners.removeWhere((listener) {
       if (
         (topic == null || listener.topic == topic) &&
         (callback == null || listener.callback == callback) && 
-        listener.messageType == Message
+        listener.messageType == MessageType
       ) {
         listener.subscription.cancel();
         return true;
@@ -84,10 +83,10 @@ class EventEmitter {
   /// // [Output]
   /// // String: Hello World
   /// ```
-  void emit<Message> (String topic, Message data) => _eventStreamEmitter.emit<Message>(topic, data);
+  void emit<MessageType> (String topic, MessageType data) => _eventStreamEmitter.emit<MessageType>(topic, data);
   
   /// Same as [emit] but with an empty [topic].
-  void send<Message> (Message data) => _eventStreamEmitter.send<Message>(data);
+  void send<MessageType> (MessageType data) => _eventStreamEmitter.send<MessageType>(data);
 
   /// Close the emitter. This will close all attached listeners.
   void close() => _eventStreamEmitter.close();
@@ -138,12 +137,12 @@ class EventStreamEmitter {
   /// EventStreamEmitter events = EventStreamEmitter();
   /// events.on<String>('message').listen((String data) => print('String: $data'));
   /// ```
-  Stream<Message> on<Message>(String topic) => onAny()
-    .where((event) => event.topic == topic && event.message is Message)
+  Stream<MessageType> on<MessageType>(String topic) => onAny()
+    .where((event) => event.topic == topic && event.message is MessageType)
     .map((event) => event.message);
 
   /// Same as [on] but with a [callback] is only called once.  
-  Future<Message> once<Message>(String topic) => on<Message>(topic).first;
+  Future<MessageType> once<MessageType>(String topic) => on<MessageType>(topic).first;
   
   /// Emit a message on a specific **type** and **topic**. This will broadcast the message to all listeners that match the same type and topic.
   /// 
@@ -154,10 +153,10 @@ class EventStreamEmitter {
   /// // [Output]
   /// // String: Hello World
   /// ```
-  void emit<Message>(String topic, Message data) => _eventEmitterController.add(Event(topic, data));
+  void emit<MessageType>(String topic, MessageType data) => _eventEmitterController.add(Event(topic, data));
 
   /// Same as [emit] but with an empty [topic].
-  void send<Message>(Message data) => emit('', data);
+  void send<MessageType>(MessageType data) => emit('', data);
 
   /// Close the emitter. This will close all attached listeners.
   void close() => _eventEmitterController.close();
@@ -165,9 +164,9 @@ class EventStreamEmitter {
 
 /// # Event
 /// A event is a message that was broadcasted to all listeners that with a type and topic.
-class Event<Message> {
+class Event<MessageType> {
   final String topic;
-  final Message message;
+  final MessageType message;
 
   const Event(this.topic, this.message);
 }
@@ -176,14 +175,15 @@ class Event<Message> {
 /// A listener is a subscription to a specific topic and type.
 /// 
 /// This includes all the objects used to attach a listener to an emitter.
-class EventListener {
+class EventListener<MessageType> {
   final String topic;
-  final Type messageType;
-  final Function callback;
-  final Stream stream;
-  final StreamSubscription subscription;
+  final Type messageType = MessageType;
+  final Function(MessageType data) callback;
+  final Stream<MessageType> stream;
+  final StreamSubscription<MessageType> subscription;
 
-  const EventListener(this.topic, this.messageType, this.callback, this.stream, this.subscription);
+  EventListener(this.topic, this.callback, this.stream) : subscription = stream.listen(callback);
+  EventListener.fromSubscription(this.topic, this.callback, this.stream, this.subscription);
 
   void cancel() => subscription.cancel();
 }

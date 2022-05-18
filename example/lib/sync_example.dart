@@ -1,7 +1,9 @@
 import 'package:events_emitter/events_emitter.dart';
 
 void main() {
-  final emitter = EventEmitter();
+  // Turning the [sync] true or false has different effects on the emitted events.
+  final emitter = EventEmitter(sync: true);
+
   emitter.on('message', (String message) => print('String: $message'));
   emitter.on('message', (int message) => print('Number: $message'));
 

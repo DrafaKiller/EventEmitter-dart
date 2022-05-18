@@ -6,3 +6,7 @@
 
 * Changed: [on] returns a EventListener, instead of a StreamSubscription
 * Fixed: Package description (was too long)
+
+## 0.0.3
+
+* Fixed: StreamSubscription, cancel instances
