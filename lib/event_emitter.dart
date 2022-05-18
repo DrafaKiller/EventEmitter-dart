@@ -1,4 +1,4 @@
-library event_emitter;
+library events_emitter;
 
 import 'dart:async';
 

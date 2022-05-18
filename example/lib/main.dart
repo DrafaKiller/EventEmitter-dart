@@ -1,4 +1,4 @@
-import 'package:event_emitter/event_emitter.dart';
+import 'package:events_emitter/events_emitter.dart';
 
 void main() {
   EventEmitter events = EventEmitter();

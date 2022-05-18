@@ -1,5 +1,5 @@
-name: event_emitter
 description: A Event-based system, uses generic types to allow for multiple data types, while still being intuitive.
+name: events_emitter
 version: 0.0.1
 homepage: https://github.com/DrafaKiller/EventEmitter-dart
 

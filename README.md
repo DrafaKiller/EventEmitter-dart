@@ -14,12 +14,12 @@ A Event-based system, highly inspired by [NodeJS's EventEmitter](https://nodejs.
 
 Install it using pub:
 ```
-flutter pub add event_emitter
+flutter pub add events_emitter
 ```
 
 And import the package:
 ```dart
-import 'package:event_emitter/event_emitter.dart';
+import 'package:events_emitter/events_emitter.dart';
 ```
 
 ## Usage
@@ -38,7 +38,7 @@ events.emit('message', 42);
 // Integer: 42
 ``` 
 
-To remove a specific listener, you can store and use the subscription to stop it.
+To remove a specific listener, you can use the subscription to stop it.
 ```dart
 final subscription = events.on('message', ... ));
 subscription.cancel();
@@ -68,7 +68,7 @@ The package code is available on Github: [Dart - EventEmitter](https://github.co
 The `EventEmitter` class can be used by itself or can be extend to create a custom event emitter.
 
 ```dart
-import 'package:event_emitter/event_emitter.dart';
+import 'package:events_emitter/events_emitter.dart';
 
 class Person extends EventEmitter {
     String name;
