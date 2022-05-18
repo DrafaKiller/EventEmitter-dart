@@ -1,6 +1,6 @@
 name: events_emitter
 description: A Event-based system, inspired by NodeJS's Event Emitter. Intuitive generic types to allow for multiple data types. Based on JavaScript and suitable for Dart and Flutter.
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/DrafaKiller/EventEmitter-dart
 
 environment:
@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_lints: ^2.0.1
 
 dev_dependencies:
   flutter_test:

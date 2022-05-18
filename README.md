@@ -98,10 +98,10 @@ void main() {
   // John ate apple
   // John jumped 0.5 meters
 }
-
 ```
+
 More examples:
 * [EventEmitter](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/main.dart)
 * [EventStreamEmitter](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/main_stream.dart)
-* [Sync](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/sync_example.dart)
+* [Sync](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/sync.dart)
 * [Extendable](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/extendable.dart)
