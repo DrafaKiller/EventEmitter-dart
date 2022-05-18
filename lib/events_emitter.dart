@@ -42,19 +42,19 @@ class EventEmitter {
   /// 
   /// If the emitted event doesn't match the specified type and topic, the callback will not be called. This method can be used with generalized types, such as `Object` and other super classes.
   /// 
-  /// A [StreamSubscription] is returned, which can be used to cancel the subscription.
+  /// A [EventListener] is returned, which has all information about the listener and can be used to cancel the subscription.
   /// 
   /// ```
   /// EventEmitter events = EventEmitter();
   /// events.on('message', (String data) => print('String: $data'));
   /// ```
-  StreamSubscription<Message> on<Message> (String topic, void Function(Message data) callback) {
+  EventListener on<Message> (String topic, void Function(Message data) callback) {
     final stream = _eventStreamEmitter.on<Message>(topic);
     final subscription = stream.listen(callback);
     final listener = EventListener(topic, Message, callback, stream, subscription);
     subscription.onDone(() => listeners.remove(listener));
     listeners.add(listener);
-    return subscription;
+    return listener;
   }
 
   /// Same as [on] but with a [callback] is only called once.
@@ -184,4 +184,6 @@ class EventListener {
   final StreamSubscription subscription;
 
   const EventListener(this.topic, this.messageType, this.callback, this.stream, this.subscription);
+
+  void cancel() => subscription.cancel();
 }
