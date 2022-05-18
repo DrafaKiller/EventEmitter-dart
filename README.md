@@ -1,6 +1,8 @@
 # Event Emitter
 A Event-based system, highly inspired by [NodeJS's EventEmitter](https://nodejs.org/api/events.html). This implementation uses generic types to allow for multiple data types, while still being intuitive.
 
+Based on JavaScript and suitable for Dart and Flutter.
+
 ## Features
 
 * Attach multiple listeners to an event.
