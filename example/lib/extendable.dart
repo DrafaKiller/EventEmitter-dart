@@ -12,11 +12,10 @@ class Person extends EventEmitter {
 
 void main() {
   final person = Person('John');
-
+  
   person.on('say', (String message) => print('${person.name} said: $message'));
   person.on('eat', (String food) => print('${person.name} ate $food'));
-  person.on(
-      'jump', (double height) => print('${person.name} jumped $height meters'));
+  person.on('jump', (double height) => print('${person.name} jumped $height meters'));
 
   person.say('I\'m a human!');
   person.eat('apple');

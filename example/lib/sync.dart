@@ -12,7 +12,7 @@ void main() {
     emitter.emit('message', 1);
 
     await Future.delayed(const Duration(seconds: 1));
-
+    
     emitter.emit('message', 'World');
     emitter.off<String>(topic: 'message');
     emitter.emit('message', 'Not showing this message');
