@@ -26,3 +26,7 @@
 
 * Added: More documentation (Why is this package different?)
 * Fixed: Documentation typos
+
+## 0.0.5+2
+
+* Changed: Package description and documentation for type safety promotion

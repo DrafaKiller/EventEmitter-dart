@@ -3,14 +3,14 @@ part of events_emitter;
 /// # Event Stream Emitter
 /// A Event-based system, highly inspired by [NodeJS's EventEmitter](https://nodejs.org/api/events.html). This implementation uses generic types to allow for multiple data types, while still being intuitive.
 /// 
-/// Based on JavaScript and suitable for Dart and Flutter with type-safety.
+/// Based on JavaScript and suitable for Dart and Flutter with type safety.
 /// 
 /// ## Features
 /// 
 /// * Attach multiple listeners to an event.
 /// * Listen to a **topic** and **data type**. 
 /// * Emit a message on a specific topic to be broadcasted to all listeners.
-/// * Type-safety
+/// * Type safety
 /// * Use callbacks with `EventEmitter`.
 /// * Use streams with `EventStreamEmitter`.
 /// * Can be extended to create custom event emitter objects.
