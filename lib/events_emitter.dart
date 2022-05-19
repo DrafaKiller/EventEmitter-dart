@@ -69,7 +69,7 @@ class EventEmitter {
   /// EventEmitter events = EventEmitter();
   /// events.on('message', (String data) => print('String: $data'));
   /// ```
-  EventListener on<MessageType> (String topic, void Function(MessageType data) callback) {
+  EventListener<MessageType> on<MessageType> (String topic, void Function(MessageType data) callback) {
     final stream = _streamEmitter.on<MessageType>(topic);
     final listener = EventListener<MessageType>(topic, callback, stream);
     listener.subscription.onDone(() => listeners.remove(listener));
