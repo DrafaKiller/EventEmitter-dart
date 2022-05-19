@@ -57,7 +57,7 @@ events.off<String>();
 // Remove listeners on topic `message`
 events.off(topic: 'message');
 
-// Combine methods above
+// Remove listeners of type `String` on topic `message`
 events.off<String>(topic: 'message');
 ```
 

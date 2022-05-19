@@ -14,3 +14,10 @@
 ## 0.0.4
 
 * Removed: package dependency `flutter_lints`
+
+## 0.0.5
+
+* Changed: [once] in [EventEmitter] now returns a [Future] with the message, allowing to `await` (still needs a callback)
+* Changed: Seperated [EventEmitter] and [EventStreamEmitter] classes into different files
+* Changed: Internal variable names for simplification
+* Removed: [send] for simplification, the same could be achieved with [emit]
