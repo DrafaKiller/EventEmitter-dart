@@ -21,3 +21,8 @@
 * Changed: Seperated [EventEmitter] and [EventStreamEmitter] classes into different files
 * Changed: Internal variable names for simplification
 * Removed: [send] for simplification, the same could be achieved with [emit]
+
+## 0.0.5+1
+
+* Added: More documentation (Why is this package different?)
+* Fixed: Documentation typos
