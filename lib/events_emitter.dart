@@ -115,6 +115,9 @@ class EventEmitter {
   /// ```
   void emit<MessageType> (String topic, MessageType data) => _streamEmitter.emit<MessageType>(topic, data);
 
+  /// Emit an event on a specific **type** and **topic**. This will broadcast the message to all listeners that match the same type and topic.
+  void emitEvent<MessageType>(Event<MessageType> event) => _streamEmitter.emitEvent<MessageType>(event);
+
   /// Close the emitter. This will close all attached listeners.
   void close() => _streamEmitter.close();
 }

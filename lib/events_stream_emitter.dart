@@ -67,7 +67,10 @@ class EventStreamEmitter {
   /// // [Output]
   /// // String: Hello World
   /// ```
-  void emit<MessageType>(String topic, MessageType data) => _controller.add(Event<MessageType>(topic, data));
+  void emit<MessageType>(String topic, MessageType data) => emitEvent(Event<MessageType>(topic, data));
+
+  /// Emit an event on a specific **type** and **topic**. This will broadcast the message to all listeners that match the same type and topic.
+  void emitEvent<MessageType>(Event<MessageType> event) => _controller.add(event);
 
   /// Close the emitter. This will close all attached listeners.
   void close() => _controller.close();
