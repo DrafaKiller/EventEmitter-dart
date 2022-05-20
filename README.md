@@ -29,7 +29,7 @@ import 'package:events_emitter/events_emitter.dart';
 ## Usage
 
 ```dart
-EventEmitter events = EventEmitter();
+final events = EventEmitter();
 
 events.on('message', (String data) => print('String: $data'));
 events.on('message', (int data) => print('Integer: $data'));

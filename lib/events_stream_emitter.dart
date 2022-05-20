@@ -36,7 +36,11 @@ class EventStreamEmitter {
   EventStreamEmitter({ bool sync = true }) : _controller = StreamController<Event>.broadcast(sync: sync);
 
   /// Attach a listener to an emitter. Returns a stream that receives new events of any **type** and **topic**.
-  Stream<Event> onAny() => _controller.stream;
+  /// 
+  /// Can be filtered by **type**.
+  Stream<Event<MessageType>> onAny<MessageType>() => _controller.stream
+    .where((event) => event.message is MessageType)
+    .cast<Event<MessageType>>();
 
   /// Attach a listener to an emitter. Returns a stream that receives new events of the specified **type** and **topic**.
   /// 
@@ -48,8 +52,8 @@ class EventStreamEmitter {
   /// EventStreamEmitter events = EventStreamEmitter();
   /// events.on<String>('message').listen((String data) => print('String: $data'));
   /// ```
-  Stream<MessageType> on<MessageType>(String topic) => onAny()
-    .where((event) => event.topic == topic && event.message is MessageType)
+  Stream<MessageType> on<MessageType>(String topic) => onAny<MessageType>()
+    .where((event) => event.topic == topic)
     .map((event) => event.message);
 
   /// Same as [on] but with a [callback] is only called once.  
@@ -64,7 +68,7 @@ class EventStreamEmitter {
   /// // [Output]
   /// // String: Hello World
   /// ```
-  void emit<MessageType>(String topic, MessageType data) => _controller.add(Event(topic, data));
+  void emit<MessageType>(String topic, MessageType data) => _controller.add(Event<MessageType>(topic, data));
 
   /// Close the emitter. This will close all attached listeners.
   void close() => _controller.close();

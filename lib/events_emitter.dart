@@ -57,7 +57,10 @@ class EventEmitter {
   final listeners = <EventListener>[];
 
   /// Attach a listener to an emitter. Calls the [callback] whenever there's a new event of any **type** and **topic**.  
-  StreamSubscription<Event> onAny(void Function(Event event) callback) => _streamEmitter.onAny().listen(callback);
+  /// 
+  /// Can be filtered by **type**.
+  StreamSubscription<Event<MessageType>> onAny<MessageType>(void Function(Event event) callback) =>
+    _streamEmitter.onAny<MessageType>().listen(callback);
   
   /// Attach a listener to an emitter. Calls the [callback] whenever there's a new event of the specified **type** and **topic**.
   /// 
