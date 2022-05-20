@@ -2,6 +2,8 @@ library events_emitter;
 
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
+
 part 'events_stream_emitter.dart';
 
 /// # Event Emitter

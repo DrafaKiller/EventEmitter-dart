@@ -1,6 +1,11 @@
+## 0.1.0
+
+* Added: `rxdart` package dependency, for better implemented streams
+* Fixed: cast with `dynamic` type would break unexpectedly
+
 ## 0.0.7
 
-* Fixed: `onAny` return type
+* Fixed: `onAny` return type (Still has errors)
 
 ## 0.0.6
 

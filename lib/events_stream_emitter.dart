@@ -39,8 +39,7 @@ class EventStreamEmitter {
   /// 
   /// Can be filtered by **type**.
   Stream<Event<MessageType>> onAny<MessageType>() => _controller.stream
-    .where((event) => event.message is MessageType)
-    .cast<Event<MessageType>>();
+    .whereType<Event<MessageType>>();
 
   /// Attach a listener to an emitter. Returns a stream that receives new events of the specified **type** and **topic**.
   /// 
