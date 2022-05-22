@@ -1,3 +1,7 @@
+## 0.2.0
+
+* Added: `.emitEvent()` to emit an event without having to create a new one 
+
 ## 0.1.0
 
 * Added: `rxdart` package dependency, for better implemented streams

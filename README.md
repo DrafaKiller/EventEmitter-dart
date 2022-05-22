@@ -65,7 +65,7 @@ events.off<String>(topic: 'message');
 
 ## Why is this package different?
 
-`events_emitter` implements the Event-based system using **streams**, then wraps it into a class that manages the callbacks, to make it more like what people are used to see in an EventEmitter. This allows you also to have the option to use the streams instead of callbacks.
+`events_emitter` implements the Event-based system using **streams**, then wraps it into a class that manages the callbacks, to make it more like what people are used to see in an EventEmitter. This allows you also to use the streams instead of callbacks if needed.
 
 And something very important, `events_emitter` allows you to use **type-safe** events, so you can use the same topic for different data types. Not having to worry about the wrong thing being passed in.
 
