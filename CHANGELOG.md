@@ -1,3 +1,7 @@
+## 0.2.1
+
+* Fixed: Make package only `dart` dependant
+
 ## 0.2.0
 
 * Added: `.emitEvent()` to emit an event without having to create a new one 
