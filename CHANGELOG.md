@@ -1,3 +1,8 @@
+## 0.3.0
+
+* Changed: `.onAny` in `EventEmitter` now returns an `EventListener`
+* Fixed: More accurate listener cancel
+
 ## 0.2.1
 
 * Fixed: Make package only `dart` dependant
@@ -8,12 +13,12 @@
 
 ## 0.1.0
 
-* Added: `rxdart` package dependency, for better implemented streams
+* Added: `rxdart` package dependency, for better-implemented streams
 * Fixed: cast with `dynamic` type would break unexpectedly
 
 ## 0.0.7
 
-* Fixed: `onAny` return type (Still has errors)
+* Fixed: `.onAny` return type (Still has errors)
 
 ## 0.0.6
 
@@ -32,10 +37,10 @@
 
 ## 0.0.5
 
-* Changed: [once] in [EventEmitter] now returns a [Future] with the message, allowing to `await` (still needs a callback)
-* Changed: Seperated [EventEmitter] and [EventStreamEmitter] classes into different files
+* Changed: `once` in `EventEmitter` now returns a `Future` with the message, allowing to `await` (still needs a callback)
+* Changed: Separated `EventEmitter` and `EventStreamEmitter` classes into different files
 * Changed: Internal variable names for simplification
-* Removed: [send] for simplification, the same could be achieved with [emit]
+* Removed: `send` for simplification, the same could be achieved with `emit`
 
 ## 0.0.4
 
@@ -47,7 +52,7 @@
 
 ## 0.0.2
 
-* Changed: [on] to return a EventListener, instead of a StreamSubscription
+* Changed: `on` to return an EventListener, instead of a StreamSubscription
 * Fixed: Package description (was too long)
 
 ## 0.0.1

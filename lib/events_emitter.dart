@@ -7,16 +7,16 @@ import 'package:rxdart/rxdart.dart';
 part 'events_stream_emitter.dart';
 
 /// # Event Emitter
-/// A Event-based system, highly inspired by [NodeJS's EventEmitter](https://nodejs.org/api/events.html). This implementation uses generic types to allow for multiple data types, while still being intuitive.
+/// An Event-based system, highly inspired by [NodeJS's Event Emitter](https://nodejs.org/api/events.html). This implementation uses generic types to allow for multiple data types, while still being intuitive.
 /// 
 /// Based on JavaScript and suitable for Dart and Flutter with type safety.
 /// 
 /// ## Features
 /// 
 /// * Attach multiple listeners to an event.
-/// * Listen to a **topic** and **data type**. 
+/// * Listen to a **topic** and **data type**.
 /// * Emit a message on a specific topic to be broadcasted to all listeners.
-/// * Type safety
+/// * Type safety.
 /// * Use callbacks with `EventEmitter`.
 /// * Use streams with `EventStreamEmitter`.
 /// * Can be extended to create custom event emitter objects.
@@ -53,7 +53,9 @@ class EventEmitter {
   /// // String: Hello World
   /// // Integer: 42
   /// ```
-  EventEmitter({ bool sync = true }) : _streamEmitter = EventStreamEmitter(sync: sync);
+  EventEmitter({ bool sync = true }) : _streamEmitter = EventStreamEmitter(sync: sync) {
+    _streamEmitter._controller.onCancel = () => listeners.removeWhere((listener) => listener.canceled);
+  }
 
   /// List of event listeners.
   final listeners = <EventListener>[];
@@ -61,8 +63,8 @@ class EventEmitter {
   /// Attach a listener to an emitter. Calls the [callback] whenever there's a new event of any **type** and **topic**.  
   /// 
   /// Can be filtered by **type**.
-  StreamSubscription<Event<MessageType>> onAny<MessageType>(void Function(Event<MessageType> event) callback) =>
-    _streamEmitter.onAny<MessageType>().listen(callback);
+  EventListener<Event<MessageType>> onAny<MessageType>(void Function(Event<MessageType> event) callback) =>
+    _createListener(null, callback, _streamEmitter.onAny<MessageType>());
   
   /// Attach a listener to an emitter. Calls the [callback] whenever there's a new event of the specified **type** and **topic**.
   /// 
@@ -74,13 +76,8 @@ class EventEmitter {
   /// EventEmitter events = EventEmitter();
   /// events.on('message', (String data) => print('String: $data'));
   /// ```
-  EventListener<MessageType> on<MessageType> (String topic, void Function(MessageType data) callback) {
-    final stream = _streamEmitter.on<MessageType>(topic);
-    final listener = EventListener<MessageType>(topic, callback, stream);
-    listener.subscription.onDone(() => listeners.remove(listener));
-    listeners.add(listener);
-    return listener;
-  }
+  EventListener<MessageType> on<MessageType> (String topic, void Function(MessageType data) callback) =>
+    _createListener(topic, callback, _streamEmitter.on<MessageType>(topic));
 
   /// Same as [on] but with a [callback] is only called once.
   Future<MessageType> once<MessageType> (String topic, void Function(MessageType data) callback) =>
@@ -90,18 +87,21 @@ class EventEmitter {
     });
 
   /// Remove an attached listener, by [type], [topic] and [callback]. This can also be achieved by using the returned [StreamSubscription].
-  void off<MessageType> ({ String? topic, void Function(MessageType data)? callback }) {
-    listeners.removeWhere((listener) {
+  Future<void> off<MessageType> ({ String? topic, void Function(MessageType data)? callback }) async {
+    final removing = <Future>[];
+    for (final listener in List<EventListener>.from(listeners)) {
       if (
         (topic == null || listener.topic == topic) &&
         (callback == null || listener.callback == callback) && 
-        listener.messageType == MessageType
+        (
+          listener is EventListener<MessageType> || 
+          listener is EventListener<Event<MessageType>>
+        )
       ) {
-        listener.subscription.cancel();
-        return true;
+        removing.add(listener.cancel());
       }
-      return false;
-    });
+    }
+    await Future.wait(removing);
   }
   
   /// Emit a message on a specific **type** and **topic**. This will broadcast the message to all listeners that match the same type and topic.
@@ -119,7 +119,19 @@ class EventEmitter {
   void emitEvent<MessageType>(Event<MessageType> event) => _streamEmitter.emitEvent<MessageType>(event);
 
   /// Close the emitter. This will close all attached listeners.
-  void close() => _streamEmitter.close();
+  void close() {
+    for (final listener in listeners) listener.canceled = true;
+    _streamEmitter.close();
+  }
+
+  EventListener<MessageType> _createListener<MessageType>(String? topic, void Function(MessageType data) callback, Stream<MessageType> stream) {
+    final listener = EventListener<MessageType>(topic, callback, stream);
+    listener.onCancel = _removeListener;
+    listeners.add(listener);
+    return listener;
+  }
+
+  void _removeListener(EventListener listener) => listeners.remove(listener);
 }
 
 /// # Event Listener
@@ -127,14 +139,21 @@ class EventEmitter {
 /// 
 /// This includes all the objects used to attach a listener to an emitter.
 class EventListener<MessageType> {
-  final String topic;
-  final Type messageType = MessageType;
-  final Function(MessageType data) callback;
+  String? topic;
+  Type messageType = MessageType;
+  void Function(MessageType data) callback;
   final Stream<MessageType> stream;
   final StreamSubscription<MessageType> subscription;
+  bool canceled = false;
+
+  void Function(EventListener)? onCancel;
 
   EventListener(this.topic, this.callback, this.stream) : subscription = stream.listen(callback);
   EventListener.fromSubscription(this.topic, this.callback, this.stream, this.subscription);
 
-  Future<void> cancel() => subscription.cancel();
+  Future<void> cancel() async {
+    canceled = true;
+    onCancel?.call(this);
+    await subscription.cancel();
+  }
 }
