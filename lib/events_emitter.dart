@@ -120,7 +120,9 @@ class EventEmitter {
 
   /// Close the emitter. This will close all attached listeners.
   void close() {
-    for (final listener in listeners) listener.canceled = true;
+    for (final listener in listeners) {
+      listener.canceled = true;
+    }
     _streamEmitter.close();
   }
 
