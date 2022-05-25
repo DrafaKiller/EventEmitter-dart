@@ -1,3 +1,6 @@
+![](https://img.shields.io/badge/pub.dev-events__emitter-blue?link=https://pub.dev/packages/events_emitter)
+![](https://img.shields.io/badge/GitHub-EventEmitter--dart-blue?link=https://github.com/DrafaKiller/EventEmitter-dart&logo=github)
+
 # Event Emitter
 
 An Event-based system, highly inspired by [NodeJS's Event Emitter](https://nodejs.org/api/events.html). This implementation uses generic types to allow for multiple data types, while still being intuitive.
