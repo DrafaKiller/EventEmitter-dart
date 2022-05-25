@@ -1,3 +1,7 @@
+## 0.3.1
+
+* Added: `shields.io` badges
+
 ## 0.3.0
 
 * Changed: `.onAny` in `EventEmitter` now returns an `EventListener`
