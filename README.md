@@ -1,5 +1,5 @@
-![](https://img.shields.io/badge/pub.dev-events__emitter-blue?link=https://pub.dev/packages/events_emitter)
-![](https://img.shields.io/badge/GitHub-EventEmitter--dart-blue?link=https://github.com/DrafaKiller/EventEmitter-dart&logo=github)
+[![Pub.dev package](https://img.shields.io/badge/pub.dev-events__emitter-blue)](https://pub.dev/packages/events_emitter)
+[![GitHub repository](https://img.shields.io/badge/GitHub-EventEmitter--dart-blue?logo=github)](https://github.com/DrafaKiller/EventEmitter-dart)
 
 # Event Emitter
 
@@ -21,7 +21,7 @@ Based on JavaScript and suitable for Dart and Flutter with type safety.
 
 Install it using pub:
 ```
-flutter pub add events_emitter
+dart pub add events_emitter
 ```
 
 And import the package:
