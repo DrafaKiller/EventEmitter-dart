@@ -8,7 +8,7 @@ Changed:
 
 ## 0.3.0
 
-Changes:
+Changed:
 * `.onAny` in `EventEmitter` now returns an `EventListener`
 
 Fixed:
