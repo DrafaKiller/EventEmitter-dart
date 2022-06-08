@@ -72,10 +72,6 @@ events.off<String>(topic: 'message');
 
 And something very important, `events_emitter` allows you to use **type-safe** events, so you can use the same topic for different data types. Not having to worry about the wrong type being passed in.
 
-## GitHub
-
-The package code is available on Github: [Dart - EventEmitter](https://github.com/DrafaKiller/EventEmitter-dart)
-
 ## Example
 
 The `EventEmitter` class can be used by itself or can be extended to create a custom event emitter.
