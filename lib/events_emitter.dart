@@ -1,7 +1,10 @@
 library events_emitter;
 
+
 import 'dart:async';
 
+import 'package:events_emitter/event.dart';
+import 'package:events_emitter/event_listener.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'events_stream_emitter.dart';
@@ -80,9 +83,21 @@ class EventEmitter {
     _createListener(topic, callback, _streamEmitter.on<MessageType>(topic));
 
   /// Same as [on] but with a [callback] is only called once.
-  Future<MessageType> once<MessageType> (String topic, void Function(MessageType data) callback) =>
+  /// 
+  /// ```dart
+  /// EventEmitter events = EventEmitter();
+  /// events.once('message', (String data) => print('String: $data'));
+  /// ```
+  /// 
+  /// Can be used asynchronously, like:
+  /// ```dart
+  /// EventEmitter events = EventEmitter();
+  /// final dynamicValue = await events.once('message');
+  /// final stringValue = await events.once<String>('message');
+  /// ```
+  Future<MessageType> once<MessageType> (String topic, [ void Function(MessageType data)? callback ]) =>
     _streamEmitter.once<MessageType>(topic).then((value) {
-      callback(value);
+      callback?.call(value);
       return value;
     });
 
@@ -134,28 +149,4 @@ class EventEmitter {
   }
 
   void _removeListener(EventListener listener) => listeners.remove(listener);
-}
-
-/// # Event Listener
-/// A listener is a subscription to a specific topic and type.
-/// 
-/// This includes all the objects used to attach a listener to an emitter.
-class EventListener<MessageType> {
-  String? topic;
-  Type messageType = MessageType;
-  void Function(MessageType data) callback;
-  final Stream<MessageType> stream;
-  final StreamSubscription<MessageType> subscription;
-  bool canceled = false;
-
-  void Function(EventListener)? onCancel;
-
-  EventListener(this.topic, this.callback, this.stream) : subscription = stream.listen(callback);
-  EventListener.fromSubscription(this.topic, this.callback, this.stream, this.subscription);
-
-  Future<void> cancel() async {
-    canceled = true;
-    onCancel?.call(this);
-    await subscription.cancel();
-  }
 }
