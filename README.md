@@ -3,19 +3,20 @@
 
 # Event Emitter
 
-An Event-based system, highly inspired by [NodeJS's Event Emitter](https://nodejs.org/api/events.html). This implementation uses generic types to allow for multiple data types, while still being intuitive.
+An Event-based system, highly inspired by [NodeJS's Event Emitter](https://nodejs.org/api/events.html). This implementation uses generic types to allow for multiple data types while being very intuitive.
 
 Based on JavaScript and suitable for Dart and Flutter with type safety.
 
 ## Features
 
-* Attach multiple listeners to an event.
-* Listen to a **topic** and **data type**.
-* Emit a message on a specific topic to be broadcasted to all listeners.
-* Type safety.
+* Attach multiple listeners to an event emitter.
+* Listen to events with a specific **event type** and **data type**.
+* Emit an event of a specific type to be broadcasted to all listeners.
+* Type safety, only the right type will be passed in.
 * Use callbacks with `EventEmitter`.
-* Use streams with `EventStreamEmitter`.
-* Can be extended to create custom event emitter objects.
+* Use streams with `StreamEventEmitter`.
+* Can be extended to create custom event emitters and events.
+* Custom events can hold custom data to be used in the listeners.
 
 ## Getting started
 
@@ -51,7 +52,7 @@ final listener = events.on('message', ... ));
 listener.cancel();
 ```
 
-Remove listeners, by targeting a **type**, **topic** and **callback**.
+Remove listeners, by targeting an **event type**, **data type** and **callback**.
 ```dart
 // Remove all listeners
 events.off();
@@ -66,11 +67,49 @@ events.off(topic: 'message');
 events.off<String>(topic: 'message');
 ```
 
+## Events
+
+## Listeners
+
+Listeners are attached to an event emitter and are called when an event matches its signature. They can be added manually for flexibility
+
+```dart
+final events = EventEmitter();
+  ...
+final listener = EventListener('message', (String data) => print('String: $data'));
+events.addEventListener(listener);
+```
+
+Special properties can be set on the listener to change its behavior.
+- `once`: If set to `true`, the listener will be removed after the first call.
+- `protected`: If set to `true`, the listener will not be removed when calling `events.off()`.
+
+Add callbacks to a listener.
+- `onAdd`: Called when the listener is added to the event emitter.
+- `onRemove`: Called when the listener is removed from the event emitter.
+- `onCancel`: Called when the listener is canceled.
+
+```dart
+final events = EventEmitter();
+  ...
+final listener = EventListener(
+  'message',
+  (String data) => ... ,
+  
+  once: false,
+  protected: false,
+
+  onAdd: (emitter, listener) => ... ,
+  onRemove: (emitter, listener) => ... ,
+  onCancel: (listener) => ... ,
+);
+```
+
 ## Why is this package different?
 
-`events_emitter` implements the Event-based system using **streams**, then wraps it into a class that manages the callbacks, to make it more like what people are used to see in an EventEmitter. This allows you also to use the streams instead of callbacks if needed.
+`events_emitter` implements the Event-based system using **callbacks** and **streams**, making it very easy to use and very flexible, allowing you to choose the best way to use it. And if you need to fit your needs, you can extend the `EventEmitter` and `Event` classes to create your own custom interface.
 
-And something very important, `events_emitter` allows you to use **type-safe** events, so you can use the same topic for different data types. Not having to worry about the wrong type being passed in.
+And something very important, `events_emitter` allows you to use **type-safe** events, so you can use the same event type for different data types. Not having to worry about the wrong type being passed in.
 
 ## Example
 
@@ -109,6 +148,7 @@ void main() {
 
 More examples:
 * [EventEmitter](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/main.dart)
-* [EventStreamEmitter](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/main_stream.dart)
+* [StreamEventEmitter](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/event_emitter_stream.dart)
 * [Sync](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/sync.dart)
 * [Extendable](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/extendable.dart)
+* [CustomEvents](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/custom_events.dart)

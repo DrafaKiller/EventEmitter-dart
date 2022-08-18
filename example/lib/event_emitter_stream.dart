@@ -1,8 +1,8 @@
-import 'package:events_emitter/events_emitter.dart';
+import 'package:events_emitter/emitters/stream_event_emitter.dart';
 
 void main() {
-  final events = EventStreamEmitter();
-  
+  final events = StreamEventEmitter();
+
   events.on<String>('message').listen((String data) => print('String: $data'));
   events.on<int>('message').listen((int data) => print('Integer: $data'));
   
