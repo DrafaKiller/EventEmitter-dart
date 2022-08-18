@@ -67,20 +67,20 @@ events.off(topic: 'message');
 events.off<String>(topic: 'message');
 ```
 
-## Events
-
 ## Listeners
 
-Listeners are attached to an event emitter and are called when an event matches its signature. They can be added manually for flexibility
+Listeners are attached to an event emitter and are called when an event matches its signature, they can be added manually for flexibility.
 
 ```dart
 final events = EventEmitter();
   ...
 final listener = EventListener('message', (String data) => print('String: $data'));
 events.addEventListener(listener);
+  ...
+listener.cancel();
 ```
 
-Special properties can be set on the listener to change its behavior.
+Specific properties can be set on the listener to change its behavior.
 - `once`: If set to `true`, the listener will be removed after the first call.
 - `protected`: If set to `true`, the listener will not be removed when calling `events.off()`.
 
@@ -107,7 +107,7 @@ final listener = EventListener(
 
 ## Why is this package different?
 
-`events_emitter` implements the Event-based system using **callbacks** and **streams**, making it very easy to use and very flexible, allowing you to choose the best way to use it. And if you need to fit your needs, you can extend the `EventEmitter` and `Event` classes to create your own custom interface.
+`events_emitter` implements the Event-based system using **callbacks** and **streams**, making it very easy to use and very flexible, allowing you to choose the best way to use it. If you need to fit your needs, you can extend the `EventEmitter` and `Event` classes to create your own custom interface.
 
 And something very important, `events_emitter` allows you to use **type-safe** events, so you can use the same event type for different data types. Not having to worry about the wrong type being passed in.
 
@@ -151,4 +151,4 @@ More examples:
 * [StreamEventEmitter](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/event_emitter_stream.dart)
 * [Sync](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/sync.dart)
 * [Extendable](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/extendable.dart)
-* [CustomEvents](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/custom_events.dart)
+* [CustomEvents](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/custom_event.dart)
