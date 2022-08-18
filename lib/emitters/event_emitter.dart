@@ -178,7 +178,9 @@ class EventEmitter {
         removed = true;
       }
     }
-    for (final listener in toRemove) removeEventListener(listener);
+    for (final listener in toRemove) {
+      removeEventListener(listener);
+    }
     return removed;
   }
 }
