@@ -1,7 +1,7 @@
 ## 0.4.2
 
 Added:
-* `cancelAdded` parameter to **EventListener**, tells the listener to automatically remove itself from the added **EventEmitter** when the `.cancel()` method is called. This is used in case you want to add your own removing method. It essentially appends callbacks to the `onCancel` callbacks.
+* `cancelAdded` parameter to **EventListener**, tells the listener to automatically remove itself from the added **EventEmitter** when the `.cancel()` method is called. This is used in case you want to add your own canceling method. It essentially appends callbacks to the `onCancel` callbacks.
 
 * `.appendCallback()` method to **EventListener**
 
