@@ -14,6 +14,7 @@ class EventListener<CallbackDataT> {
   final bool protected;
   EventCallbackAdd<CallbackDataT>? onAdd;
   EventCallbackRemove<CallbackDataT>? onRemove;
+  EventCallbackCall<CallbackDataT>? onCall;
   EventCallbackCancel<CallbackDataT>? onCancel;
 
   bool _canceled = false;
@@ -26,7 +27,7 @@ class EventListener<CallbackDataT> {
   EventListener(this.type, this.callback, {
     this.once = false,
     this.protected = false,
-    this.onAdd, this.onRemove, this.onCancel,
+    this.onAdd, this.onRemove, this.onCall, this.onCancel,
     bool cancelAdded = true,
   }) {
     if (cancelAdded) {
@@ -48,9 +49,11 @@ class EventListener<CallbackDataT> {
   /// Listeners that don't match the event count as satisfied.
   bool call<T extends Event>(T event) {
     if (!canceled && validate(event)) {
-      final data = event.data;
-      final satisfied = callback((data is CallbackDataT ? data : event) as CallbackDataT);
+      final data = (event.data is CallbackDataT ? event.data : event) as CallbackDataT;
+      final satisfied = callback(data);
       if (once) cancel();
+      
+      onCall?.call(this, data);
       
       if (satisfied is bool) return satisfied;
       return true;
@@ -59,7 +62,8 @@ class EventListener<CallbackDataT> {
   }
 
   /// Checks if the listener matches a given event.
-  bool validate<T extends Event>(T event) => (
+  bool validate<T extends Event>(T event) =>
+    (
       event is CallbackDataT || 
       event is Event<CallbackDataT> ||
       isSubtype<T, CallbackDataT>() || 
@@ -90,6 +94,7 @@ class EventListener<CallbackDataT> {
   void appendCallback({
     EventCallbackAdd<CallbackDataT>? onAdd,
     EventCallbackRemove<CallbackDataT>? onRemove,
+    EventCallbackCall<CallbackDataT>? onCall,
     EventCallbackCancel<CallbackDataT>? onCancel,
   }) {
     if (onAdd != null) {
@@ -102,9 +107,17 @@ class EventListener<CallbackDataT> {
 
     if (onRemove != null) {
       final oldRemove = this.onRemove;
-      this.onRemove = (EventEmitter emitter, EventListener<CallbackDataT> listener) {
-        oldRemove?.call(emitter, listener);
-        onRemove.call(emitter, listener);
+      this.onRemove = (EventEmitter emitter) {
+        oldRemove?.call(emitter);
+        onRemove.call(emitter);
+      };
+    }
+
+    if (onCall != null) {
+      final oldCall = this.onCall;
+      this.onCall = (EventListener<CallbackDataT> listener, CallbackDataT data) {
+        oldCall?.call(listener, data);
+        onCall.call(listener, data);
       };
     }
     
@@ -121,5 +134,6 @@ class EventListener<CallbackDataT> {
 typedef EventCallback<T> = dynamic Function(T data);
 
 typedef EventCallbackAdd<T> = void Function(EventEmitter emitter, EventListener<T> listener);
+typedef EventCallbackRemove<T> = void Function(EventEmitter emitter);
+typedef EventCallbackCall<T> = void Function(EventListener<T> listener, T data);
 typedef EventCallbackCancel<T> = void Function(EventListener<T> listener);
-typedef EventCallbackRemove<T> = void Function(EventEmitter emitter, EventListener<T> listener);

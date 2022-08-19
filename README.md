@@ -151,4 +151,4 @@ More examples:
 * [StreamEventEmitter](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/event_emitter_stream.dart)
 * [Sync](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/sync.dart)
 * [Extendable](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/extendable.dart)
-* [CustomEvents](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/custom_event.dart)
+* [CustomEvent](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/custom_event.dart)

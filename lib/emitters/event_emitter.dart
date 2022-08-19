@@ -60,16 +60,17 @@ class EventEmitter {
   /// 
   /// This methods calls the `onAdd` method of the listener.
   bool addEventListener<T>(EventListener<T> listener) {
-    listener.onAdd?.call(this, listener);
-    return listeners.add(listener);
+    final added = listeners.add(listener);
+    if (added) listener.onAdd?.call(this, listener);
+    return added;
   }
   
   /// Removes a listener from the emitter.
   /// 
   /// This methods calls the `onRemove` method of the listener.
-  bool removeEventListener(EventListener listener) {
+  bool removeEventListener<T>(EventListener<T> listener) {
     final removed = listeners.remove(listener);
-    listener.onRemove?.call(this, listener);
+    if (removed) listener.onRemove?.call(this);
     return removed;
   }
 
@@ -168,16 +169,11 @@ class EventEmitter {
   /// Remove an attached listener, by **event type**, **data type** and **callback**...
   bool off<T>({ String? type, EventCallback<T>? callback }) {
     bool removed = false;
-    final toRemove = <EventListener>[];
-    for (final listener in listeners) {
+    for (final listener in listeners.toList()) {
       if (listener.protected) continue;
       if (listener.matches(type, callback)) {
-        toRemove.add(listener);
-        removed = true;
+        removed = removeEventListener(listener) || removed;
       }
-    }
-    for (final listener in toRemove) {
-      removeEventListener(listener);
     }
     return removed;
   }
