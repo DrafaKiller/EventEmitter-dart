@@ -8,4 +8,5 @@ environment:
   sdk: ">=2.17.0 <3.0.0"
   
 dependencies: 
+  lint: ^1.10.0
   rxdart: ^0.27.5

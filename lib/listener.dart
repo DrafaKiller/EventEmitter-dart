@@ -1,7 +1,6 @@
+import 'package:events_emitter/emitters/event_emitter.dart';
 import 'package:events_emitter/event.dart';
 import 'package:events_emitter/utils/type.dart';
-
-import 'emitters/event_emitter.dart';
 
 /// # Event Listener
 /// A listener is a subscription to a specific **event type** and **data type**.
@@ -39,7 +38,8 @@ class EventListener<CallbackDataT> {
   /// Listeners that don't match the event count as satisfied.
   bool call<T extends Event>(T event) {
     if (!canceled && validate(event)) {
-      final satisfied = callback(event.data is CallbackDataT ? event.data : event);
+      final data = event.data;
+      final satisfied = callback((data is CallbackDataT ? data : event) as CallbackDataT);
       if (once) cancel();
       
       if (satisfied is bool) return satisfied;

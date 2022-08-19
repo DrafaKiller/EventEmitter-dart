@@ -92,7 +92,7 @@ class EventEmitter {
   /// it's expected to have the same effect as a normal event.
   bool emitEvent<T extends Event>(T event) {
     bool allSatisfied = true;
-    for (var listener in listeners.toList()) {
+    for (final listener in listeners.toList()) {
       final satisfied = listener.call<T>(event);
       if (!satisfied) allSatisfied = false;
     }
@@ -156,10 +156,13 @@ class EventEmitter {
   /// ```
   Future<T> once<T>(String? type, [ EventCallback<T>? callback ]) {
     final completer = Completer<T>();
-    final listener = EventListener<T>(type, (data) {
-      callback?.call(data);
-      completer.complete(data);
-    }, once: true);
+    final listener = EventListener<T>(
+      type, (data) {
+        callback?.call(data);
+        completer.complete(data);
+      },
+      once: true,
+    );
     addEventListener(listener);
     return completer.future;
   }
@@ -170,7 +173,7 @@ class EventEmitter {
   /// Remove an attached listener, by **event type**, **data type** and **callback**...
   bool off<T>({ String? type, EventCallback<T>? callback }) {
     bool removed = false;
-    final toRemove = [];
+    final toRemove = <EventListener>[];
     for (final listener in listeners) {
       if (listener.protected) continue;
       if (listener.matches(type, callback)) {

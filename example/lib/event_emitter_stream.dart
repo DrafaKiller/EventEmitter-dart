@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:events_emitter/emitters/stream_event_emitter.dart';
 
 void main() {
