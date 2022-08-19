@@ -168,7 +168,7 @@ class EventEmitter {
   EventListener<T> onAny<T>(EventCallback<T> callback) => on(null, callback);
 
   /// Remove an attached listener, by **event type**, **data type** and **callback**...
-  bool off<T>([ String? type, EventCallback<T>? callback ]) {
+  bool off<T>({ String? type, EventCallback<T>? callback }) {
     bool removed = false;
     final toRemove = [];
     for (final listener in listeners) {
