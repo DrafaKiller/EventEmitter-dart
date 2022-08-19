@@ -60,8 +60,8 @@ class EventListener<CallbackDataT> {
   /// Checks if the listener matches the **event type**, **data type** and **callback**.
   bool matches<T>([ String? type, EventCallback<T>? callback ]) =>
     (
-      isSubtype<T, CallbackDataT>() || 
-      isSubtype<T, Event<CallbackDataT>>()
+      isSubtype<CallbackDataT, T>() || 
+      isSubtype<Event<CallbackDataT>, T>()
     ) &&
     (this.type == type || this.type == null || type == null) &&
     (this.callback == callback || callback == null);

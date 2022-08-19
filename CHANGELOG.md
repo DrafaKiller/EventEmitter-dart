@@ -1,28 +1,29 @@
 ## 0.4.1
 
 Changed:
-* `rxdart` dependency updated from `0.27.3` to `0.27.5`.
+* `rxdart` dependency updated from `0.27.3` to `0.27.5`
 
 **`[!]`** Fixed:
-* Positional parameters in `.off()` changed to named parameters, as it was intended.
+* Positional parameters in `.off()` changed to named parameters, as it was intended
+* Type matching in `.off()`
 
 ## 0.4.0
 
 Added:
-* **EventListener** properties `once` and `protected` added. 
-* **EventListener** callbacks `onAdd`, `onRemove` and `onCancel`.
+* **EventListener** properties `once` and `protected` added
+* **EventListener** callbacks `onAdd`, `onRemove` and `onCancel`
 * **EventListener** handles custom events, they can also act like normal events. This is used to add context to an event if needed.
-* **EventEmitter** `.on()` can catch the data as well as the **Event\<T>** of the data.
+* **EventEmitter** `.on()` can catch the data as well as the **Event\<T>** of the data
 
 **`[!]`** Changed:
-* **EventStreamEmitter** was renamed to **StreamEventEmitter**.
-* **Event** property **topic** renamed to **type**, to match JavaScript events.
-* **Event** property **message** renamed to **data**.
-* **StreamEventEmitter**'s stream controller is now public.
+* **EventStreamEmitter** was renamed to **StreamEventEmitter**
+* **Event** property **topic** renamed to **type**, to match JavaScript events
+* **Event** property **message** renamed to **data**
+* **StreamEventEmitter**'s stream controller is now public
 
 **`[!]`** Removed:
 * **EventEmitter** sync.
-* **EventListener** property `stream`, `subscription` and `messageType`.
+* **EventListener** property `stream`, `subscription` and `messageType`
 
 Massive BREAKING CHANGES:
 * **EventEmitter** was refactored to not depend on Streams, which means it now manages the callbacks itself. The emitter can have more complex listener logic. Before it would depend on **StreamEventEmitter**.
