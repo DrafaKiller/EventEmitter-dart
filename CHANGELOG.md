@@ -1,3 +1,11 @@
+## 0.4.1
+
+Changed:
+* `rxdart` dependency updated from `0.27.3` to `0.27.5`.
+
+**`[!]`** Fixed:
+* Positional parameters in `.off()` changed to named parameters, as it was intended.
+
 ## 0.4.0
 
 Added:
