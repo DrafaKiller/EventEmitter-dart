@@ -12,10 +12,10 @@ class EventListener<CallbackDataT> {
   
   final bool once;
   final bool protected;
-  final EventAddedCallback<CallbackDataT>? onAdd;
-  EventCancelCallback<CallbackDataT>? onCancel;
-  final EventRemoveCallback<CallbackDataT>? onRemove;
-  
+  EventCallbackAdd<CallbackDataT>? onAdd;
+  EventCallbackRemove<CallbackDataT>? onRemove;
+  EventCallbackCancel<CallbackDataT>? onCancel;
+
   bool _canceled = false;
   bool get canceled => _canceled;
 
@@ -26,8 +26,18 @@ class EventListener<CallbackDataT> {
   EventListener(this.type, this.callback, {
     this.once = false,
     this.protected = false,
-    this.onAdd, this.onCancel, this.onRemove,
-  });
+    this.onAdd, this.onRemove, this.onCancel,
+    bool cancelAdded = true,
+  }) {
+    if (cancelAdded) {
+      appendCallback(
+        onAdd: (emitter, listener) {
+          listener.appendCallback(onCancel: (listener) => emitter.removeEventListener(listener));
+        },
+      );
+    }
+  }
+  //}) : onAdd = cancelAdded ? EventListener._cancelAdded(onAdd) : onAdd;
 
   /// Checks if the listener matches the event.
   /// If the event is valid, the callback will be called.
@@ -76,10 +86,40 @@ class EventListener<CallbackDataT> {
       onCancel?.call(this);
     }
   }
+
+  void appendCallback({
+    EventCallbackAdd<CallbackDataT>? onAdd,
+    EventCallbackRemove<CallbackDataT>? onRemove,
+    EventCallbackCancel<CallbackDataT>? onCancel,
+  }) {
+    if (onAdd != null) {
+      final oldAdd = this.onAdd;
+      this.onAdd = (EventEmitter emitter, EventListener<CallbackDataT> listener) {
+        oldAdd?.call(emitter, listener);
+        onAdd.call(emitter, listener);
+      };
+    }
+
+    if (onRemove != null) {
+      final oldRemove = this.onRemove;
+      this.onRemove = (EventEmitter emitter, EventListener<CallbackDataT> listener) {
+        oldRemove?.call(emitter, listener);
+        onRemove.call(emitter, listener);
+      };
+    }
+    
+    if (onCancel != null) {
+      final oldCancel = this.onCancel;
+      this.onCancel = (EventListener<CallbackDataT> listener) {
+        oldCancel?.call(listener);
+        onCancel.call(listener);
+      };
+    }
+  }
 }
 
 typedef EventCallback<T> = dynamic Function(T data);
 
-typedef EventAddedCallback<T> = void Function(EventEmitter emitter, EventListener<T> listener);
-typedef EventCancelCallback<T> = void Function(EventListener<T> listener);
-typedef EventRemoveCallback<T> = void Function(EventEmitter emitter, EventListener<T> listener);
+typedef EventCallbackAdd<T> = void Function(EventEmitter emitter, EventListener<T> listener);
+typedef EventCallbackCancel<T> = void Function(EventListener<T> listener);
+typedef EventCallbackRemove<T> = void Function(EventEmitter emitter, EventListener<T> listener);

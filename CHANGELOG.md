@@ -1,11 +1,26 @@
+## 0.4.2
+
+Added:
+* `cancelAdded` parameter to **EventListener**, tells the listener to automatically remove itself from the added **EventEmitter** when the `.cancel()` method is called. This is used in case you want to add your own removing method. It essentially appends callbacks to the `onCancel` callbacks.
+
+* `.appendCallback()` method to **EventListener**
+
+**`[!]`** Changed:
+* Typedef **EventAddedCallback** renamed to **EventCallbackAdd**
+* Typedef **EventRemoveCallback** renamed to **EventCallbackRemove**
+* Typedef **EventCancelCallback** renamed to **EventCallbackCancel**
+
+Fixed:
+* `lint` dependency moved to developer dependency
+
 ## 0.4.1
 
 Changed:
 * `rxdart` dependency updated from `0.27.3` to `0.27.5`
 
-**`[!]`** Fixed:
-* Positional parameters in `.off()` changed to named parameters, as it was intended
+Fixed:
 * Type matching in `.off()`
+* **`[!]`** Positional parameters in `.off()` changed to named parameters, as it was intended
 
 ## 0.4.0
 

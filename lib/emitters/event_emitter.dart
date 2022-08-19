@@ -59,12 +59,7 @@ class EventEmitter {
   /// When an event is emitted, the listeners added will be matched.
   /// 
   /// This methods calls the `onAdd` method of the listener.
-  bool addEventListener(EventListener listener) {
-    final previousOnCancel = listener.onCancel;
-    listener.onCancel = (listener) {
-      previousOnCancel?.call(listener);
-      removeEventListener(listener);
-    };
+  bool addEventListener<T>(EventListener<T> listener) {
     listener.onAdd?.call(this, listener);
     return listeners.add(listener);
   }
