@@ -57,14 +57,14 @@ Remove listeners, by targeting an **event type**, **data type** and **callback**
 // Remove all listeners
 events.off();
 
-// Remove listeners of type `String`
+// Remove listeners of data type `String`
 events.off<String>();
 
-// Remove listeners on topic `message`
-events.off(topic: 'message');
+// Remove listeners on event type `message`
+events.off(type: 'message');
 
-// Remove listeners of type `String` on topic `message`
-events.off<String>(topic: 'message');
+// Remove listeners of data type `String` on event type `message`
+events.off<String>(type: 'message');
 ```
 
 ## Listeners
@@ -151,4 +151,4 @@ More examples:
 * [StreamEventEmitter](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/event_emitter_stream.dart)
 * [Sync](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/sync.dart)
 * [Extendable](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/extendable.dart)
-* [CustomEvents](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/custom_event.dart)
+* [CustomEvent](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/custom_event.dart)
