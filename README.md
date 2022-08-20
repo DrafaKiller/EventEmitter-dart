@@ -149,6 +149,5 @@ void main() {
 More examples:
 * [EventEmitter](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/main.dart)
 * [StreamEventEmitter](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/event_emitter_stream.dart)
-* [Sync](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/sync.dart)
 * [Extendable](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/extendable.dart)
 * [CustomEvent](https://github.com/DrafaKiller/EventEmitter-dart/blob/main/example/lib/custom_event.dart)
