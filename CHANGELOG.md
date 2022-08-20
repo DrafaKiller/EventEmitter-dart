@@ -1,11 +1,16 @@
+## 0.4.4
+
+Added:
+* **EventListener** property `dataType`
+
 ## 0.4.3
 
 Added:
-* **StreamEventListener**, it's useful for having a streaming alternative to the default **EventEmitter** class.
+* **StreamEventListener**, it's useful for having a streaming alternative to the default **EventEmitter** class
 
 Fixed:
-* Documentation with old property `topic` naming.
-* **EventListener** callbacks would throw an exception in some cases when using dynamic.
+* Documentation with old property `topic` naming
+* **EventListener** callbacks would throw an exception in some cases when using dynamic
 
 ## 0.4.2
 
@@ -46,7 +51,7 @@ Added:
 * **StreamEventEmitter**'s stream controller is now public
 
 **`[!]`** Removed:
-* **EventEmitter** sync.
+* **EventEmitter** sync
 * **EventListener** property `stream`, `subscription` and `messageType`
 
 Massive BREAKING CHANGES:

@@ -9,6 +9,7 @@ import 'package:events_emitter/utils/type.dart';
 class EventListener<CallbackDataT> {
   final String? type;
   final EventCallback<CallbackDataT> callback;
+  final Type dataType = CallbackDataT;
   
   final bool once;
   final bool protected;
@@ -33,12 +34,13 @@ class EventListener<CallbackDataT> {
     if (cancelAdded) {
       appendCallback(
         onAdd: (emitter, listener) {
-          listener.appendCallback(onCancel: (listener) => emitter.removeEventListener(listener));
+          listener.appendCallback(
+            onCancel: (listener) => emitter.removeEventListener(listener),
+          );
         },
       );
     }
   }
-  //}) : onAdd = cancelAdded ? EventListener._cancelAdded(onAdd) : onAdd;
 
   /// Checks if the listener matches the event.
   /// If the event is valid, the callback will be called.
