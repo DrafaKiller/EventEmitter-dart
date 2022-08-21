@@ -67,7 +67,7 @@ class EventListener<CallbackDataT> {
   bool validate<T extends Event>(T event) =>
     (
       event is CallbackDataT || 
-      event is Event<CallbackDataT> ||
+      event.data is CallbackDataT ||
       isSubtype<T, CallbackDataT>() || 
       isSubtype<T, Event<CallbackDataT>>()
     ) && 

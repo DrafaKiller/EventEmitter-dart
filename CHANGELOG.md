@@ -3,6 +3,9 @@
 Added:
 * **EventListener** property `dataType`
 
+Fixed:
+* Improved data type validation for `dynamic` data
+
 ## 0.4.3
 
 Added:
