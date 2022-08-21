@@ -1,3 +1,8 @@
+## 0.4.5
+
+Fixed:
+* `.emit()` returns satisfaction
+
 ## 0.4.4
 
 Added:

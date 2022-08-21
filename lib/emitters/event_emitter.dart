@@ -107,7 +107,7 @@ class EventEmitter {
   /// ```
   /// 
   /// Same as [emitEvent], but with a simpler syntax.
-  void emit<T>(String type, T data) => emitEvent(Event<T>(type, data));
+  bool emit<T>(String type, T data) => emitEvent(Event<T>(type, data));
 
   /// Attach a listener to an emitter.
   /// Calls the [callback] whenever there's a new event of the specified **event type** and **data type**.
