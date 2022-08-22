@@ -80,13 +80,14 @@ events.addEventListener(listener);
 listener.cancel();
 ```
 
-Specific properties can be set on the listener to change its behavior.
+Properties can be set on the listener to change its behavior:
 - `once`: If set to `true`, the listener will be removed after the first call.
 - `protected`: If set to `true`, the listener will not be removed when calling `events.off()`.
 
-Add callbacks to a listener.
+Add callbacks to the listener:
 - `onAdd`: Called when the listener is added to the event emitter.
 - `onRemove`: Called when the listener is removed from the event emitter.
+- `onCall`: Called when the listener is called.
 - `onCancel`: Called when the listener is canceled.
 
 ```dart
@@ -94,14 +95,15 @@ final events = EventEmitter();
   ...
 final listener = EventListener(
   'message',
-  (String data) => ... ,
+  (String data) => print(data),
   
   once: false,
   protected: false,
 
-  onAdd: (emitter, listener) => ... ,
-  onRemove: (emitter, listener) => ... ,
-  onCancel: (listener) => ... ,
+  onAdd: (emitter) => print('Added to emitter'),
+  onRemove: (emitter) => print('Removed from emitter'),
+  onCall: (data) => print('Called with data: $data'),
+  onCancel: () => print('Listener canceled'),
 );
 ```
 

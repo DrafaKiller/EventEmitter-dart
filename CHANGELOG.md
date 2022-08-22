@@ -1,3 +1,12 @@
+## 0.5.0
+
+**`[!]`** Removed:
+* Redundant `listener` reference of itself, in  **EventListener** callbacks: `onAdd`, `onRemove`, `onCall` and `onCancel`. For simplicity and to avoid `dynamic` listener type issues. Use `this` if possible, or a reference of the listener instead.
+
+Fixed:
+* **EventListener** callbacks documentation
+* Main example
+
 ## 0.4.5
 
 Fixed:

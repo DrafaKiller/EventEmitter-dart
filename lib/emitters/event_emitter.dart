@@ -61,7 +61,7 @@ class EventEmitter {
   /// This methods calls the `onAdd` method of the listener.
   bool addEventListener<T>(EventListener<T> listener) {
     final added = listeners.add(listener);
-    if (added) listener.onAdd?.call(this, listener);
+    if (added) listener.onAdd?.call(this);
     return added;
   }
   

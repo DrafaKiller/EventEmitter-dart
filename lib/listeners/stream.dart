@@ -22,7 +22,7 @@ class StreamEventListener<T> extends EventListener<T> {
   }) : super(type, callback ?? (T data) {}) {
     appendCallback(
       onRemove: (emitter) => close(),
-      onCall: (listener, data) => _controller.add(data),
+      onCall: (data) => _controller.add(data),
     );
   }
 

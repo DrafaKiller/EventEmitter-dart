@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 import 'package:events_emitter/events_emitter.dart';
-import 'package:events_emitter/listeners/stream.dart';
 
 void main() {
   final events = EventEmitter();
