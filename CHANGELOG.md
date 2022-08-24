@@ -1,7 +1,14 @@
+## 0.5.1
+
+Added:
+* **ListCallback**, a helper class that when appended on `.on()` lets you have multiple arguments.
+Essentially splitting a list event `Event<List<dynamic>>` into arguments,
+it's a workaround for the fact that Dart can't handle spread syntax. *See [ListCallback] documentation.*
+
 ## 0.5.0
 
 **`[!]`** Removed:
-* Redundant `listener` reference of itself, in  **EventListener** callbacks: `onAdd`, `onRemove`, `onCall` and `onCancel`. For simplicity and to avoid `dynamic` listener type issues. Use `this` if possible, or a reference of the listener instead.
+* Redundant `listener` reference of itself, in  **EventListener** callbacks: `onAdd`, `onRemove`, `onCall` and `onCancel`. For simplicity and to avoid `dynamic` listener's type issues. Use `this` if possible, or a reference of the listener instead.
 
 Fixed:
 * **EventListener** callbacks documentation
