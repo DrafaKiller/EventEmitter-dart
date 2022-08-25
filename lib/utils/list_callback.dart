@@ -18,6 +18,15 @@ import 'package:events_emitter/events_emitter.dart';
 /// emitter.emit('message', ['Hello World', 123]);
 /// ```
 class ListCallback {
+  static EventCallback<List<dynamic>> args1<T1>(
+    dynamic Function(T1 data1) callback,
+  ) => (data) {
+    if (_validate<T1, dynamic, dynamic, dynamic, dynamic, dynamic, dynamic, dynamic, dynamic, dynamic>(data)) {
+      return callback(data[0] as T1);
+    }
+    return false;
+  };
+
   static EventCallback<List<dynamic>> args2<T1, T2>(
     dynamic Function(T1 data1, T2 data2) callback,
   ) => (data) {

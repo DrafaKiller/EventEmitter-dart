@@ -82,7 +82,7 @@ listener.cancel();
 
 Properties can be set on the listener to change its behavior:
 - `once`: If set to `true`, the listener will be removed after the first call.
-- `protected`: If set to `true`, the listener will not be removed when calling `events.off()`.
+- `protected`: If set to `true`, the listener will be immune to `events.off()`.
 
 Add callbacks to the listener:
 - `onAdd`: Called when the listener is added to the event emitter.
