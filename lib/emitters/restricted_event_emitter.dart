@@ -27,8 +27,12 @@ class RestrictedEventEmitter extends EventEmitter {
   
   @override
   bool addEventListener<T>(EventListener<T> listener) {
-    if (!_checkAllowed(listener.type)) throw EventNotAllowedException(listener.type!);
-    if (maxListeners != null && listeners.length >= maxListeners!) throw MaxListenersException(maxListeners!);
+    if (!_checkAllowed(listener.type)) {
+      throw EventNotAllowedException(listener.type!);
+    }
+    if (maxListeners != null && listeners.length >= maxListeners!) {
+      throw MaxListenersException(maxListeners!);
+    }
     return super.addEventListener(listener);
   }
 
