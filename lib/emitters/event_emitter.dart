@@ -40,6 +40,7 @@ class EventEmitter {
   final Set<EventListener> listeners = {};
 
   /// # EventEmitter
+  /// 
   /// ```dart
   /// EventEmitter events = EventEmitter();
   /// 
@@ -107,7 +108,10 @@ class EventEmitter {
   /// ```
   /// 
   /// Same as [emitEvent], but with a simpler syntax.
-  bool emit<T>(String type, T data) => emitEvent(Event<T>(type, data));
+  bool emit<T>(String type, [ T? data ]) {
+    if (data == null) return emitEvent(Event(type, null));
+    return emitEvent(Event<T>(type, data));
+  }
 
   /// Attach a listener to an emitter.
   /// Calls the [callback] whenever there's a new event of the specified **event type** and **data type**.

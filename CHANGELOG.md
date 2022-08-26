@@ -1,7 +1,11 @@
 ## 0.5.2
 
 Added:
+- **RestrictedEventEmitter** for better control by allowing or disallowing specific event types, and the max listeners limit.
 - `ListCallback.args1()` to get the first argument of the list in a callback, added for consistency
+
+Changed:
+- Data property in `.emit()` is optional, if no data is given the event will be of type `Event<Null>` which can still be caught by `EventCallback<dynamic>`
 
 ## 0.5.1
 
