@@ -7,6 +7,9 @@ Added:
 Changed:
 - Data property in `.emit()` is optional, if no data is given the event will be of type `Event<Null>` which can still be caught by `EventCallback<dynamic>`
 
+Fixed:
+- Replaced `lint` developer dependency with `lints`
+
 ## 0.5.1
 
 Added:

@@ -9,6 +9,6 @@ environment:
   
 dependencies:
   rxdart: ^0.27.5
-  
-dev_dependencies: 
-  lint: ^1.10.0
+
+dev_dependencies:
+  lints: ^2.0.0
