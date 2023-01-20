@@ -1,7 +1,7 @@
 library listenable;
 
 part 'listening.dart';
-part 'callable.dart';
+part 'call.dart';
 
 class Listenable<CallbackT extends Function> {
   final callbacks = <CallbackT>[];

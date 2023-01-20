@@ -11,7 +11,7 @@ class Listening<CallbackT extends Function> {
   /* -= Action Methods =- */
 
   bool cancel() {
-    onCancel?.call();
+    onCancel?.singleHandler();
     return listenable.callbacks.remove(callback);
   }
 

@@ -17,17 +17,24 @@ class Event<T> {
   Event(this.type, this.data);
 }
 
-class EventListener<T> {
+class EventListener<T extends Event> {
   final String type;
-
-  final onAdd = Listenable<Function(String test2, [ int? okay, dynamic idk ])>();
-
   EventListener(this.type);
 
-  void main() {
-    final subscription = onAdd.listen((test2, [okay, idk]) => print);
-    subscription.cancel();
+  void emit(T event) => onData(event.data);
 
-    onAdd.call('123');
+  bool validate(Event event) => event is T && event.type == type;
+
+  bool accept(Event event) {
+    if (!validate(event)) return false;
+    emit(event as T);
+    return true;
   }
+
+  /* -= Event Callbacks =- */
+
+  final onAdd = Listenable<void Function(EventEmitter emitter)>();
+  final onRemove = Listenable<void Function(EventEmitter emitter)>();
+  final onData = Listenable<void Function(T data)>();
+  final onCancel = Listenable<void Function()>();
 }
