@@ -8,6 +8,13 @@ extension EmptyListenable on Listenable {
 
 extension SingleListenable<T> on Listenable<Function(T)> {
   void call(T data) => callbacks.forEach((callback) => callback(data));
+
+  Stream<T> get stream {
+    final controller = StreamController<T>();
+    final listening = listen((data) => controller.add(data));
+    controller.onCancel = listening.cancel;
+    return controller.stream;
+  }
 }
 
 extension OptionalListenable<T> on Listenable<Function([ T? ])> {

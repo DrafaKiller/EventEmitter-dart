@@ -1,40 +1,60 @@
+import 'dart:io';
+
 import '../listenable.dart';
+
+part 'event.dart';
+part 'listener.dart';
 
 typedef EventCallback<T> = void Function(T data);
 
 class EventEmitter {
   final listeners = <EventListener>{};
 
-  EventListener<T> on<T>(String type, [ EventCallback<T>? callback ]) {
-    
-  }
-}
+  /* -= Listener Methods =- */
 
-class Event<T> {
-  final String type;
-  final T data;
-
-  Event(this.type, this.data);
-}
-
-class EventListener<T extends Event> {
-  final String type;
-  EventListener(this.type);
-
-  void emit(T event) => onData(event.data);
-
-  bool validate(Event event) => event is T && event.type == type;
-
-  bool accept(Event event) {
-    if (!validate(event)) return false;
-    emit(event as T);
+  bool addEventListener(EventListener listener) {
+    if (listeners.contains(listener)) return false;
+    listeners.add(listener);
+    listener.onAdd(this);
     return true;
   }
 
-  /* -= Event Callbacks =- */
+  bool removeEventListener(EventListener listener) {
+    if (!listeners.contains(listener)) return false;
+    listeners.remove(listener);
+    listener.onRemove(this);
+    return true;
+  }
 
-  final onAdd = Listenable<void Function(EventEmitter emitter)>();
-  final onRemove = Listenable<void Function(EventEmitter emitter)>();
-  final onData = Listenable<void Function(T data)>();
-  final onCancel = Listenable<void Function()>();
+  bool emitEvent(Event event) {
+    var consumed = false;
+    for (var listener in listeners) {
+      if (listener.accept(event)) consumed = true;
+    }
+    return consumed;
+  }
+
+  /* -= Event Methods =- */
+
+  void emit<T>(String type, [ T? data ]) => emitEvent(Event(type, data));
+  
+  EventListener<Event<T>> on<T>(String? type, [ EventListenerOnData<T>? callback ]) {
+    final listener = EventListener(type, callback: callback);
+    addEventListener(listener);
+    return listener;
+  }
+
+  EventListener<EventT> onEvent<EventT extends Event>([ EventListenerOnEvent<EventT>? callback ]) {
+    final listener = EventListener(null, callback: callback);
+    addEventListener(listener);
+    return listener;
+  }
+}
+
+void main() {
+  final emitter = EventEmitter();
+  emitter.on('test', (Event<String> event) => print(event));
+  emitter.on('test', (String data) => print(data));
+  emitter.onEvent((Event<String> event) => print(event));
+  emitter.emit('test', 'Hello World!');
 }

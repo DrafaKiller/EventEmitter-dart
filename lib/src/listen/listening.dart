@@ -4,14 +4,14 @@ class Listening<CallbackT extends Function> {
   final Listenable<CallbackT> listenable;
   final CallbackT callback;
 
-  final Function? onCancel;
+  final ListenableCancelCallback? onCancel;
 
   const Listening(this.listenable, this.callback, { this.onCancel });
 
   /* -= Action Methods =- */
 
   bool cancel() {
-    onCancel?.singleHandler();
+    onCancel?.call();
     return listenable.callbacks.remove(callback);
   }
 
