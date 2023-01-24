@@ -4,7 +4,7 @@ class Listening<CallbackT extends Function> {
   final Listenable<CallbackT> listenable;
   final CallbackT callback;
 
-  final ListenableCancelCallback? onCancel;
+  final ListeningCancelCallback? onCancel;
 
   const Listening(this.listenable, this.callback, { this.onCancel });
 
@@ -19,3 +19,5 @@ class Listening<CallbackT extends Function> {
 
   bool get isCancelled => !listenable.callbacks.contains(callback);
 }
+
+typedef ListeningCancelCallback = void Function();
