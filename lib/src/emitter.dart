@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import '../listenable.dart';
 
 part 'event.dart';
@@ -26,7 +24,7 @@ class EventEmitter {
     return true;
   }
 
-  bool emitEvent(Event event) {
+  bool emitEvent<T extends Event>(T event) {
     var consumed = false;
     for (var listener in listeners) {
       if (listener.accept(event)) consumed = true;
@@ -36,10 +34,16 @@ class EventEmitter {
 
   /* -= Event Methods =- */
 
-  void emit<T>(String type, [ T? data ]) => emitEvent(Event(type, data));
+  void emit<T>(String type, [ T? data ]) {
+    if (data == null) {
+      emitEvent(Event<T?>(type, data));
+    } else {
+      emitEvent(Event<T>(type, data));
+    }
+  }
   
   EventListener<Event<T>> on<T>(String? type, [ EventListenerOnData<T>? callback ]) {
-    final listener = EventListener(type, callback: callback);
+    final listener = EventListener(type, callback: callback != null ? (Event<T> event) => callback(event.data) : null);
     addEventListener(listener);
     return listener;
   }
@@ -49,12 +53,4 @@ class EventEmitter {
     addEventListener(listener);
     return listener;
   }
-}
-
-void main() {
-  final emitter = EventEmitter();
-  emitter.on('test', (Event<String> event) => print(event));
-  emitter.on('test', (String data) => print(data));
-  emitter.onEvent((Event<String> event) => print(event));
-  emitter.emit('test', 'Hello World!');
 }

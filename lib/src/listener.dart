@@ -24,23 +24,26 @@ class EventListener<EventT extends Event> {
 
   /* -= Event Methods =- */
 
-  bool accept(Event event) {
-    if (this is EventListener<Event<Event>>) return accept(Event(event.type, event));
+  bool accept<T extends Event>(T event) {
+    if (isForWrapped && !event.isWrapped) return accept(event.wrap());
+
     if (!validate(event)) return false;
-    emit(event as EventT);
+    execute(event as EventT);
     return true;
   }
 
-  bool validate(Event event) => event is EventT && event.type == type;
+  bool validate(Event event) => event is EventT && (type == null || event.type == type);
 
-  void emit(EventT event) => onEvent(event);
+  void execute(EventT event) => onEvent(event);
+
+  void cancel() => onCancel();
 
   /* -= Streams =- */
 
   Stream<EventT> get events => onEvent.stream;
 
   /* -= Callbacks =- */
-
+  
   final onAdd = Listenable<EventListenerOnAdd>();
   final onRemove = Listenable<EventListenerOnRemove>();
   final onEvent = Listenable<EventListenerOnEvent<EventT>>();
@@ -54,3 +57,9 @@ typedef EventListenerOnRemove = void Function(EventEmitter emitter);
 typedef EventListenerOnEvent<T extends Event> = void Function(T event);
 typedef EventListenerOnData<T> = void Function(T data);
 typedef EventListenerOnCancel = void Function();
+
+/* -= Extended Functionality =- */
+
+extension _WrappedListener on EventListener {
+  bool get isForWrapped => this is EventListener<Event<Event>>;
+}
