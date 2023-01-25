@@ -1,3 +1,5 @@
+import 'package:events_emitter/listenable.dart';
+
 class Event<T> {
   final String type;
   final T data;
@@ -12,8 +14,8 @@ class EventTarget<T extends Event> {
   const EventTarget.any() : this(null);
 }
 
-class EventSubscription<T extends Event> {
-  final Function() _onCancel;
+class EventSubscription {
+  final EventListenerOnCancel _onCancel;
   EventSubscription(this._onCancel);
 
   bool _cancelled = false;
@@ -25,6 +27,12 @@ class EventSubscription<T extends Event> {
     _onCancel();
   }
 }
+
+typedef EventListenerOnAdd = void Function(EventEmitter emitter);
+typedef EventListenerOnRemove = void Function(EventEmitter emitter);
+typedef EventListenerOnEvent<T extends Event> = void Function(T event);
+typedef EventListenerOnData<T> = void Function(T data);
+typedef EventListenerOnCancel = void Function();
 
 class EventListener<T extends Event> {
   
