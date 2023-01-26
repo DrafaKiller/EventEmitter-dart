@@ -1,5 +1,3 @@
-import 'package:events_emitter/listenable.dart';
-
 class Event<T> {
   final String type;
   final T data;
@@ -9,22 +7,26 @@ class Event<T> {
 
 class EventTarget<T extends Event> {
   final String? type;
-
+  
   const EventTarget(this.type);
   const EventTarget.any() : this(null);
+
+  bool validate(T event) => type == null || event.type == type;
+
+  bool accept(Event event) => event is T && validate(event);
 }
 
-class EventSubscription {
-  final EventListenerOnCancel _onCancel;
-  EventSubscription(this._onCancel);
+class EventSubscription<T extends Event> {
+  final EventEmitter emitter;
+  final EventListener<T> listener;
 
-  bool _cancelled = false;
-  bool get cancelled => _cancelled;
+  EventSubscription(this.emitter, this.listener);
+
+  bool get cancelled => !emitter.listeners.contains(listener);
 
   void cancel() {
-    if (_cancelled) return;
-    _cancelled = true;
-    _onCancel();
+    if (cancelled) return;
+    emitter.removeEventListener(listener);
   }
 }
 
@@ -35,10 +37,12 @@ typedef EventListenerOnData<T> = void Function(T data);
 typedef EventListenerOnCancel = void Function();
 
 class EventListener<T extends Event> {
+  final EventTarget target;
   
+  const EventListener(this.target);
+
+
 }
-
-
 
 class EventEmitter {
   final listeners = <EventListener>{};
@@ -55,4 +59,10 @@ class EventEmitter {
 
   /* -= Event Methods =- */
 
+  EventSubscription<T> onEvent<T extends Event>(EventCallback<T> callback) {
+    final listener = EventListener<T>(EventTarget<T>.any());
+    return EventSubscription(this, listener);
+  }
 }
+
+typedef EventCallback<T extends Event> = void Function(T event);
