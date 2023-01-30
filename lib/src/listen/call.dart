@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_extensions
+
 part of 'listenable.dart';
 
 /* -= Basic =- */ 

@@ -1,56 +1,75 @@
-import '../listenable.dart';
+import 'dart:async';
+import 'dart:collection';
 
+import 'package:events_emitter/listenable.dart';
+import 'package:events_emitter/src/utils/type.dart';
+
+part 'definitions.dart';
 part 'event.dart';
 part 'listener.dart';
+part 'subscription.dart';
+part 'target.dart';
 
-typedef EventCallback<T> = void Function(T data);
-
-class EventEmitter {
+abstract class EventEmitter {
   final listeners = <EventListener>{};
 
   /* -= Listener Methods =- */
 
   bool addEventListener(EventListener listener) {
-    if (listeners.contains(listener)) return false;
-    listeners.add(listener);
-    listener.onAdd(this);
-    return true;
+    final added = listeners.add(listener);
+    if (added) listener.onAdd(this);
+    return added;
   }
-
   bool removeEventListener(EventListener listener) {
-    if (!listeners.contains(listener)) return false;
-    listeners.remove(listener);
-    listener.onRemove(this);
+    final removed = listeners.remove(listener);
+    if (removed) listener.onRemove(this);
+    return removed;
+  }
+
+  /* -= Emitting Methods =- */
+
+  bool emit<T>(String type, [ T? data ]) => dispatch(data != null ? Event<T>(type, data) : Event<T?>(type, null));
+  bool dispatch(Event event) {
+    if (listeners.isEmpty) return false;
+    for (final listener in listeners) {
+      listener.accept(event);
+    }
     return true;
   }
 
-  bool emitEvent<T extends Event>(T event) {
-    var consumed = false;
-    for (var listener in listeners) {
-      if (listener.accept(event)) consumed = true;
-    }
-    return consumed;
+  /* -= Listening Methods =- */
+
+  EventSubscription<Event<T>> on<T>(String type, [ EventListenerOnData<T>? callback ]);
+  EventSubscription<Event<T>> once<T>(String type, [ EventListenerOnData<T>? callback ]);
+  EventSubscription<T> onDispatch<T extends Event>([ EventListenerOnEvent<T>? callback ]);
+
+  bool off<T extends Event>([ String? type ]) {
+    final target = EventTarget<Event<T>>(type);
+    return listeners
+      .where((listener) => listener.target.matches<Event<T>>(type) || listener.target.matches<Event<T>>(type))
+      .fold(false, (removed, listener) => listener.cancel() || removed);
   }
 
-  /* -= Event Methods =- */
-
-  void emit<T>(String type, [ T? data ]) {
-    if (data == null) {
-      emitEvent(Event<T?>(type, data));
-    } else {
-      emitEvent(Event<T>(type, data));
-    }
-  }
-  
-  EventListener<Event<T>> on<T>(String? type, [ EventListenerOnData<T>? callback ]) {
-    final listener = EventListener(type, callback: callback != null ? (Event<T> event) => callback(event.data) : null);
-    addEventListener(listener);
-    return listener;
-  }
-
-  EventListener<EventT> onEvent<EventT extends Event>([ EventListenerOnEvent<EventT>? callback ]) {
-    final listener = EventListener(null, callback: callback);
-    addEventListener(listener);
-    return listener;
+  void main() {
+    this.on('jump', (Event<String> event) => print('jumped'));
   }
 }
+
+/* 
+
+T = Event<String>
+T = Event<Event<String>>
+
+class JumpEvent extends Event<String> {
+  JumpEvent(String data) : super('jump', data);
+}
+
+class CrouchEvent extends Event<String> {
+  CrouchEvent(String data) : super('crouch', data);
+}
+
+matches<T extends Event>() => ...;
+
+isAssignable<T, Event>() && matches<T as Event>()
+
+*/

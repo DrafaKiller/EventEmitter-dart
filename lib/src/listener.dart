@@ -1,65 +1,47 @@
 part of 'emitter.dart';
 
-class EventListener<EventT extends Event> {
-  final String? type;
-  
-  final bool once;
+abstract class EventListener<T extends Event> extends Listenable<EventListenerOnEvent<T>> {
+  final EventTarget<T> target;
+  final subscriptions = <EventSubscription<T>>{};
+
   final bool protected;
+  final bool once;
 
-  EventListener(this.type, {
-    this.once = false,
+  EventListener(this.target, {
     this.protected = false,
+    this.once = false,
 
-    // Callbacks
-    EventListenerOnAdd? onAdd,
-    EventListenerOnRemove? onRemove,
-    EventListenerOnEvent<EventT>? callback,
-    EventListenerOnCancel? onCancel,
+    EventListenerOnEvent<T>? onEvent,
   }) {
-    if (onAdd != null) this.onAdd.listen(onAdd);
-    if (onRemove != null) this.onRemove.listen(onRemove);
-    if (callback != null) this.onEvent.listen(callback);
-    if (onCancel != null) this.onCancel.listen(onCancel);
+    if (onEvent != null) this.onEvent.listen(onEvent);
   }
 
   /* -= Event Methods =- */
 
-  bool accept<T extends Event>(T event) {
-    if (isForWrapped && !event.isWrapped) return accept(event.wrap());
+  Stream<T> get stream => onEvent.stream;
+  
+  bool accept(Event event) {
+    if (!target.accept(event)) return false;
+    return execute(event as T);
+  }
 
-    if (!validate(event)) return false;
-    execute(event as EventT);
+  bool execute(T event);
+
+  /* -= Subscription Methods =- */
+
+  bool get isCancelled => subscriptions.isEmpty;
+  bool cancel() {
+    if (isCancelled) return false;
+    for (final subscription in subscriptions) {
+      subscription.cancel();
+    }
     return true;
   }
 
-  bool validate(Event event) => event is EventT && (type == null || event.type == type);
+  /* -= Listener Callbacks =- */
 
-  void execute(EventT event) => onEvent(event);
-
-  void cancel() => onCancel();
-
-  /* -= Streams =- */
-
-  Stream<EventT> get events => onEvent.stream;
-
-  /* -= Callbacks =- */
-  
   final onAdd = Listenable<EventListenerOnAdd>();
   final onRemove = Listenable<EventListenerOnRemove>();
-  final onEvent = Listenable<EventListenerOnEvent<EventT>>();
+  final onEvent = Listenable<EventListenerOnEvent<T>>();
   final onCancel = Listenable<EventListenerOnCancel>();
-}
-
-/* -= Event Callbacks =- */
-
-typedef EventListenerOnAdd = void Function(EventEmitter emitter);
-typedef EventListenerOnRemove = void Function(EventEmitter emitter);
-typedef EventListenerOnEvent<T extends Event> = void Function(T event);
-typedef EventListenerOnData<T> = void Function(T data);
-typedef EventListenerOnCancel = void Function();
-
-/* -= Extended Functionality =- */
-
-extension _WrappedListener on EventListener {
-  bool get isForWrapped => this is EventListener<Event<Event>>;
 }
