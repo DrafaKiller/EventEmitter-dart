@@ -1,7 +1,7 @@
 part of 'emitter.dart';
 
 
-class EventSubscription<T extends Event> extends Listening<EventListenerOnEvent<T>> {
+class EventSubscription<T extends Event> {
   final EventEmitter emitter;
   final EventListener<T> listener;
 

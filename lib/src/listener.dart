@@ -1,6 +1,6 @@
 part of 'emitter.dart';
 
-abstract class EventListener<T extends Event> extends Listenable<EventListenerOnEvent<T>> {
+abstract class EventListener<T extends Event> {
   final EventTarget<T> target;
   final subscriptions = <EventSubscription<T>>{};
 
