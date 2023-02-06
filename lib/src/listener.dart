@@ -1,47 +1,62 @@
 part of 'emitter.dart';
 
-abstract class EventListener<T extends Event> {
-  final EventTarget<T> target;
-  final subscriptions = <EventSubscription<T>>{};
+class EventListener<T extends I.Event> extends EventSubscription<T> implements I.EventListener<T> {
+  final I.EventTarget<T> target;
 
   final bool protected;
   final bool once;
 
+  final I.EventCallback? alias;
+
   EventListener(this.target, {
+    this.alias,
+
     this.protected = false,
     this.once = false,
+  });
 
-    EventListenerOnEvent<T>? onEvent,
-  }) {
-    if (onEvent != null) this.onEvent.listen(onEvent);
+  /* -= Mounting Methods =- */
+  
+  void bind(I.EventEmitter emitter) {
+    if (mounted) return;
+    _emitter = emitter;
+    _onAdd.complete(emitter);
+  }
+
+  void unbind() {
+    if (!mounted) return;
+    _emitter = null;
+    _onRemove.complete();
   }
 
   /* -= Event Methods =- */
-
-  Stream<T> get stream => onEvent.stream;
   
-  bool accept(Event event) {
+  @override
+  I.EventStream<T> get stream => throw UnimplementedError();
+  
+  bool accept(I.Event event) {
     if (!target.accept(event)) return false;
     return execute(event as T);
   }
 
-  bool execute(T event);
+  bool execute(T event) {
+    if (cancelled) return false;
+    if (!_onEvent.hasListener) return false;
 
-  /* -= Subscription Methods =- */
+    _onEvent.add(event);
 
-  bool get isCancelled => subscriptions.isEmpty;
-  bool cancel() {
-    if (isCancelled) return false;
-    for (final subscription in subscriptions) {
-      subscription.cancel();
-    }
+    if (once) cancel();
     return true;
   }
 
-  /* -= Listener Callbacks =- */
+  /* -= Callbacks =- */
 
-  final onAdd = Listenable<EventListenerOnAdd>();
-  final onRemove = Listenable<EventListenerOnRemove>();
-  final onEvent = Listenable<EventListenerOnEvent<T>>();
-  final onCancel = Listenable<EventListenerOnCancel>();
+  Future<I.EventEmitter> get onAdd => _onAdd.future;
+  Future<void> get onRemove => _onRemove.future;
+  
+  /* -= Controllers =- */
+
+  final _onAdd = Completer<I.EventEmitter>();
+  final _onRemove = Completer<void>();
+  final _onEvent = StreamController<T>.broadcast();
 }

@@ -1,75 +1,59 @@
 import 'dart:async';
-import 'dart:collection';
 
-import 'package:events_emitter/listenable.dart';
-import 'package:events_emitter/src/utils/type.dart';
+import 'interface/emitter.dart' as I;
+import 'utils/type.dart';
 
-part 'definitions.dart';
 part 'event.dart';
 part 'listener.dart';
 part 'subscription.dart';
 part 'target.dart';
 
-abstract class EventEmitter {
-  final listeners = <EventListener>{};
+class EventEmitter implements I.EventEmitter {
+  final listeners = <I.EventListener>{};
+  I.EventStream get events => _onEvent.stream;
 
   /* -= Listener Methods =- */
 
-  bool addEventListener(EventListener listener) {
-    final added = listeners.add(listener);
-    if (added) listener.onAdd(this);
-    return added;
+  bool addEventListener(I.EventListener listener) {
+    if (!listeners.add(listener)) return false;
+    listener.onCancel.then((_) => removeEventListener(listener));
+    listener.bind(this);
+    return true;
   }
-  bool removeEventListener(EventListener listener) {
-    final removed = listeners.remove(listener);
-    if (removed) listener.onRemove(this);
-    return removed;
+  
+  bool removeEventListener(I.EventListener listener) {
+    if (!listeners.remove(listener)) return false;
+    listener.unbind();
+    return true;
   }
 
   /* -= Emitting Methods =- */
 
   bool emit<T>(String type, [ T? data ]) => dispatch(data != null ? Event<T>(type, data) : Event<T?>(type, null));
-  bool dispatch(Event event) {
-    if (listeners.isEmpty) return false;
-    for (final listener in listeners) {
-      listener.accept(event);
-    }
-    return true;
+  
+  bool dispatch<T extends I.Event>(T event) {
+    final consumed = listeners.fold(false, (bool consumed, listener) => listener.accept(event) || consumed);
+    _onEvent.add(event);
+    return consumed;
   }
 
   /* -= Listening Methods =- */
 
-  EventSubscription<Event<T>> on<T>(String type, [ EventListenerOnData<T>? callback ]);
-  EventSubscription<Event<T>> once<T>(String type, [ EventListenerOnData<T>? callback ]);
-  EventSubscription<T> onDispatch<T extends Event>([ EventListenerOnEvent<T>? callback ]);
-
-  bool off<T extends Event>([ String? type ]) {
-    final target = EventTarget<Event<T>>(type);
-    return listeners
-      .where((listener) => listener.target.matches<Event<T>>(type) || listener.target.matches<Event<T>>(type))
-      .fold(false, (removed, listener) => listener.cancel() || removed);
+  I.EventSubscription<Event<T>> on<T>(String type, [ I.EventCallback<T>? callback ]) {
+    final listener = EventListener<Event<T>>(EventTarget(type), alias: callback);
+    addEventListener(listener);
+    return EventSubscription<Event<T>>(this, listener);
   }
 
-  void main() {
-    this.on('jump', (Event<String> event) => print('jumped'));
+  I.EventSubscription<Event<T>> once<T>(String type, [ I.EventCallback<T>? callback ]);
+
+  I.EventSubscription<T> onDispatch<T extends I.Event>([ I.EventDispatchCallback<T>? callback ]);
+
+  bool off<T extends I.Event>({ String? type, I.EventCallback<T>? callback }) {
+
   }
+
+  /* -= Controllers =- */
+
+  final _onEvent = StreamController<I.Event>.broadcast();
 }
-
-/* 
-
-T = Event<String>
-T = Event<Event<String>>
-
-class JumpEvent extends Event<String> {
-  JumpEvent(String data) : super('jump', data);
-}
-
-class CrouchEvent extends Event<String> {
-  CrouchEvent(String data) : super('crouch', data);
-}
-
-matches<T extends Event>() => ...;
-
-isAssignable<T, Event>() && matches<T as Event>()
-
-*/

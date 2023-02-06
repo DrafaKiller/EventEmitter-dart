@@ -1,20 +1,29 @@
 part of 'emitter.dart';
 
+abstract class EventSubscription<T extends I.Event> implements I.EventSubscription<T> {
+  /* -= Mounting Methods =- */
+  
+  I.EventEmitter? _emitter;
+  I.EventEmitter get emitter => _emitter!;
+  
+  bool get mounted => _emitter != null;
 
-class EventSubscription<T extends Event> {
-  final EventEmitter emitter;
-  final EventListener<T> listener;
+  /* -= Event Methods =- */
 
-  final onCancel = Listenable<EventSubscriptionOnCancel>();
+  I.EventStream<T> get stream;
 
-  EventSubscription(this.emitter, this.listener) : super();
-
-  bool get isCancelled => !emitter.listeners.contains(listener);
+  bool get cancelled => _onCancel.isCompleted;
   bool cancel() {
-    if (isCancelled) return false;
-    listener.subscriptions.remove(this);
-    onCancel();
-    listener.onCancel();
-    return emitter.removeEventListener(listener);
+    if (cancelled) return false;
+    _onCancel.complete();
+    return true;
   }
+
+  /* -= Callbacks =- */
+
+  Future<void> get onCancel => _onCancel.future;
+
+  /* -= Controllers =- */
+
+  final _onCancel = Completer<void>();
 }
