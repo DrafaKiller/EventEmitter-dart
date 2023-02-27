@@ -48,7 +48,7 @@ events.emit('message', 42);
 
 To remove a specific listener, you can use the subscription to stop it.
 ```dart
-final listener = events.on('message', ... ));
+final listener = events.on('message', ... );
 listener.cancel();
 ```
 
