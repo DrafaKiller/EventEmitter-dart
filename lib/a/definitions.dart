@@ -4,7 +4,7 @@ part of 'emitter.dart';
 
 typedef EventController<T extends Event> = StreamController<T>;
 typedef EventSink<T extends Event> = StreamSink<T>;
-// typedef EventStream<T extends Event> = Stream<T>;
+typedef EventStream<T extends Event> = Stream<T>;
 typedef EventFuture<T extends Event> = Future<T>;
 
 /* -= Listener Callbacks =- */

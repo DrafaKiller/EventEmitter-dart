@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:events_emitter/src/interface/emitter.dart';
+import 'package:events_emitter/src/interfaces/emitter.dart';
 
 void main() {
   final events = EventEmitter();
