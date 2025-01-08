@@ -5,10 +5,10 @@ repository: https://github.com/DrafaKiller/EventEmitter-dart
 issue_tracker: https://github.com/DrafaKiller/EventEmitter-dart/issues
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.17.0 <4.0.0"
   
 dependencies:
-  rxdart: ^0.27.5
+  rxdart: ^0.28.0
 
 dev_dependencies:
   lints: ^2.0.0
